@@ -1,28 +1,37 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Counter v-for="team in teams" :key="team.id" v-bind="team" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import { mapState } from 'vuex';
+
+import Counter from '@/components/Counter.vue';
 
 export default {
   name: 'app',
-  components: {
-    HelloWorld,
-  },
+  components: { Counter },
+  computed: mapState(['teams']),
 };
 </script>
 
 <style>
+* {
+  font-family: Roboto, sans-serif;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+body {
+  font-size: 16px;
+  margin: 0;
+}
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 </style>
