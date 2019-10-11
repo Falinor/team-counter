@@ -1,16 +1,29 @@
 <template>
   <div class="counter" :style="{ backgroundColor: color2hex(color) }">
-    <h4 class="name">{{ name }}</h4>
-    <p class="points" @click="increment({ id, points })" @contextmenu="decrement({ id, points })">{{ points }}</p>
+    <input
+      v-if="isEditing"
+      type="text"
+      class="name"
+      ref="nameInput"
+      :value="name"
+      @blur="endEdition"
+    >
+    <h4 v-else class="name" @click="startEdition">{{ name }}</h4>
+    <p
+      class="points"
+      @click="$emit('increment')"
+      @click.right.prevent="$emit('decrement')"
+    >
+      {{ points }}
+    </p>
   </div>
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
-
-import { DECREMENT, INCREMENT } from '../store';
-
 export default {
+  data: () => ({
+    isEditing: false,
+  }),
   props: {
     id: Number,
     name: String,
@@ -23,13 +36,22 @@ export default {
     },
   },
   methods: {
-    ...mapMutations([INCREMENT, DECREMENT]),
     color2hex(color) {
       const colors = {
         blue: '#377aff',
         orange: '#ff8a24',
       };
       return colors[color];
+    },
+    startEdition() {
+      this.isEditing = !this.isEditing;
+      this.$nextTick().then((vm) => {
+        vm.$refs.nameInput.focus();
+      });
+    },
+    endEdition({ target }) {
+      this.isEditing = !this.isEditing;
+      this.$emit('nameChange', target.value);
     },
   },
 };
@@ -38,6 +60,7 @@ export default {
 <style scoped>
 .counter {
   height: 100%;
+  width: 50%;
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
@@ -46,7 +69,13 @@ export default {
 }
 
 .name {
+  display: inline-block;
   font-size: 3em;
+  font-weight: 700;
+  margin: 24px;
+  background: transparent;
+  border: none;
+  width: auto;
 }
 
 .points {

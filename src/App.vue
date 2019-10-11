@@ -1,18 +1,35 @@
 <template>
   <div id="app">
-    <Counter v-for="team in teams" :key="team.id" v-bind="team" />
+    <button id="reset" type="button" @click="reset">
+      <i class="material-icons">replay</i>
+    </button>
+    <Counter
+      v-for="(team, i) in teams"
+      :key="i"
+      v-bind="team"
+      @increment="increment(i)"
+      @decrement="decrement(i)"
+      @nameChange="name => changeName({ i, name })"
+    />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 import Counter from '@/components/Counter.vue';
+import {
+  CHANGE_NAME,
+  DECREMENT,
+  INCREMENT,
+  RESET,
+} from '@/store';
 
 export default {
   name: 'app',
   components: { Counter },
   computed: mapState(['teams']),
+  methods: mapMutations([INCREMENT, DECREMENT, CHANGE_NAME, RESET]),
 };
 </script>
 
@@ -33,5 +50,23 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+
+#reset {
+  position: fixed;
+  left: 0;
+  top: 0;
+  margin: 16px;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+#time {
+  position: fixed;
+  right: 0;
+  top: 0;
+  margin: 16px;
+  padding: 0;
 }
 </style>
