@@ -76,6 +76,12 @@ export default {
   background: transparent;
   border: none;
   width: auto;
+  text-align: center;
+}
+
+.name:focus {
+  color: rgba(0, 0, 0, 0.54);
+  outline: none;
 }
 
 .points {
